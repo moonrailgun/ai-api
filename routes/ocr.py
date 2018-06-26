@@ -51,6 +51,10 @@ def general_base64():
             'result': False,
             'msg': u'缺少base64',
         })
+
+    if ',' in base64str:
+        base64str = base64str.rsplit(',', 1)[1]
+
     image = base64.b64decode(base64str) # 将base64解码
 
     res = ocr_client.basicGeneral(image, {
