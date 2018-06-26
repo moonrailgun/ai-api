@@ -6,6 +6,10 @@ import base64
 
 ocr = Blueprint('ocr', __name__)
 
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'bmp']
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS
+
 @ocr.route('/general/url', methods=['post'])
 def general_url():
     data = request.get_json()
@@ -50,6 +54,46 @@ def general_base64():
     image = base64.b64decode(base64str) # 将base64解码
 
     res = ocr_client.basicGeneral(image, {
+        'language_type': language_type,
+        'detect_direction': detect_direction,
+        'detect_language': detect_language,
+        'probability': probability,
+    })
+
+    if res.get('error_code'):
+        return jsonify({
+            'result': False,
+            'msg': res.get('error_msg', ''),
+        })
+
+    return jsonify({
+        'result': True,
+        'data': res,
+    })
+
+@ocr.route('/general/image', methods=['post'])
+def general_image():
+    image = request.files.get('image')
+    language_type = request.form.get('language_type', 'CHN_ENG')
+    detect_direction = request.form.get('detect_direction', False)
+    detect_language = request.form.get('detect_language', False)
+    probability = request.form.get('probability', False)
+
+    if not image:
+        return jsonify({
+            'result': False,
+            'msg': u'缺少image',
+        })
+
+    if not(image and allowed_file(image.filename)):
+        return jsonify({
+            'result': False,
+            'msg': u'文件上传失败,只允许jpg/png/bmp',
+        })
+
+    # 不存储
+    data = image.read()
+    res = ocr_client.basicGeneral(data, {
         'language_type': language_type,
         'detect_direction': detect_direction,
         'detect_language': detect_language,
