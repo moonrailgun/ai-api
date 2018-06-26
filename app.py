@@ -4,12 +4,14 @@ from flask import Flask, request, jsonify
 import json
 import requests
 from routes.ocr import ocr
+from routes.speech import speech
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 app = Flask(__name__)
 app.register_blueprint(ocr, url_prefix='/api/ocr')
+app.register_blueprint(speech, url_prefix='/api/speech')
 
 @app.errorhandler(404)
 def error(error):
