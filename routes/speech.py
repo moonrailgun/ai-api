@@ -24,6 +24,7 @@ def speech_synthesis():
         })
 
     result = speech_client.synthesis(tex, 'zh', 1, {
+        'cuid': cuid,
         'spd': spd,
         'pit': pit,
         'vol': vol,

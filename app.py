@@ -14,7 +14,7 @@ app.register_blueprint(ocr, url_prefix='/api/ocr')
 app.register_blueprint(speech, url_prefix='/api/speech')
 
 @app.errorhandler(404)
-def error(error):
+def no_found(error):
     return jsonify({
         'result': False,
         'msg': u'请求地址不存在'
