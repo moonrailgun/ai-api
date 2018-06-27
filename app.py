@@ -5,6 +5,7 @@ import json
 import requests
 from routes.ocr import ocr
 from routes.speech import speech
+from routes.image_classify import image_classify
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -12,6 +13,7 @@ sys.setdefaultencoding('utf8')
 app = Flask(__name__)
 app.register_blueprint(ocr, url_prefix='/api/ocr')
 app.register_blueprint(speech, url_prefix='/api/speech')
+app.register_blueprint(image_classify, url_prefix='/api/image/classify')
 
 @app.errorhandler(404)
 def no_found(error):
